@@ -208,7 +208,7 @@ if __name__ == '__main__':
   max_per_image = 100
 
   # vis = args.vis
-  vis = True
+  vis = False
   
   if vis:
     thresh = 0.05
