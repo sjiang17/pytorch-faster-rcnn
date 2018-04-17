@@ -21,7 +21,9 @@ class _fasterRCNN(nn.Module):
     def __init__(self, classes, class_agnostic):
         super(_fasterRCNN, self).__init__()
         self.classes = classes
+        print('classes: ', self.classes)
         self.n_classes = len(classes)
+        pritn('len classes: ', self.n_classes)
         self.class_agnostic = class_agnostic
         # loss
         self.RCNN_loss_cls = 0
