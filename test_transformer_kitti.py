@@ -90,6 +90,7 @@ def parse_args():
                       help='visualization mode',
                       action='store_true')
   parser.add_argument('--gen', dest='gen')
+  parser.add_argument('--gpuind', dest='gpuind', default='0')
   args = parser.parse_args()
   return args
 
@@ -99,13 +100,12 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 if __name__ == '__main__':
   
-  os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-  
   args = parse_args()
-
   print('Called with args:')
   print(args)
 
+  os.environ["CUDA_VISIBLE_DEVICES"] = args.gpuind
+  
   if torch.cuda.is_available() and not args.cuda:
     print("WARNING: You have a CUDA device, so you should probably run with --cuda")
 
@@ -170,7 +170,7 @@ if __name__ == '__main__':
   model_dict = fasterRCNN.state_dict()
   
   
-  print("load checkpoint %s" % (load_name))
+  print("loading checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)
   if 'pooling_mode' in checkpoint.keys():
     cfg.POOLING_MODE = checkpoint['pooling_mode']
@@ -193,8 +193,8 @@ if __name__ == '__main__':
   model_dict.update(checkpoint2)
   fasterRCNN.load_state_dict(model_dict)
   
-  # transformer_model_name = args.gen
-  transformer_model_name = '/siyuvol/py_flood/save/test3/transformer_test3_95.pth' 
+  transformer_model_name = args.gen
+  # transformer_model_name = '/siyuvol/py_flood/save/test3/transformer_test3_95.pth' 
   # transformer_model_name = 'transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_85.pth'
   # transformer_model_name = '/siyuvol/py_flood/save/MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP/transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_95.pth'
   # transformer_model_name = '/home/tmu/py_flood/save/shallow/adv_conv4_lr1e-05_lrd1e-06_lmda0.001_ftshallow/transformer_adv_conv4_lr1e-05_lrd1e-06_lmda0.001_ftshallow_45.pth'
@@ -207,11 +207,12 @@ if __name__ == '__main__':
   
   model_dict = fasterRCNN.state_dict()
   
-  for k in sorted(model_dict.keys()):
-    print (k)
+  # for k in sorted(model_dict.keys()):
+  #   print (k)
   print('load model successfully!')
 
-  
+  print(transformer_model_name)
+
   # initilize the tensor holder here.
   im_data = torch.FloatTensor(1)
   im_info = torch.FloatTensor(1)
