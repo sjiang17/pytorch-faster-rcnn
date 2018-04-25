@@ -57,7 +57,7 @@ def parse_args():
                       help='set config keys', default=None,
                       nargs=argparse.REMAINDER)
   parser.add_argument('--load_dir', dest='load_dir',
-                      help='directory to load models', default="/home/tmu/py_flood/pytorch_model",
+                      help='directory to load models', default="/siyuvol/pytorch-model",
                       nargs=argparse.REMAINDER)
   parser.add_argument('--cuda', dest='cuda',
                       help='whether use CUDA',
@@ -89,6 +89,7 @@ def parse_args():
   parser.add_argument('--vis', dest='vis',
                       help='visualization mode',
                       action='store_true')
+  parser.add_argument('--gen', dest='gen')
   args = parser.parse_args()
   return args
 
@@ -191,8 +192,11 @@ if __name__ == '__main__':
   model_dict = fasterRCNN.state_dict()
   model_dict.update(checkpoint2)
   fasterRCNN.load_state_dict(model_dict)
-
-  transformer_model_name = '/home/tmu/py_flood/save/kitti_adv_lrg1e-05_lrd1e-06_lmda0.001_r3.0/transformer_kitti_adv_lrg1e-05_lrd1e-06_lmda0.001_r3.0_80.pth'
+  
+  # transformer_model_name = args.gen
+  transformer_model_name = '/siyuvol/py_flood/save/MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP/transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_185.pth'
+  # transformer_model_name = 'transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_85.pth'
+  # transformer_model_name = '/siyuvol/py_flood/save/MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP/transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_95.pth'
   # transformer_model_name = '/home/tmu/py_flood/save/shallow/adv_conv4_lr1e-05_lrd1e-06_lmda0.001_ftshallow/transformer_adv_conv4_lr1e-05_lrd1e-06_lmda0.001_ftshallow_45.pth'
   image_save_dir = '/home/tmu/py_flood/output/UNet2_conv4_lr0.001_SGD_wd/test'
   
