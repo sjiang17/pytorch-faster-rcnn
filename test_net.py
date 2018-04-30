@@ -165,7 +165,7 @@ if __name__ == '__main__':
     print("network is not defined")
     pdb.set_trace()
   
-  image_save_dir = '/home/tmu/py_flood/output/fasterRCNN_vgg/kitti_only_occ'
+  image_save_dir = '/siyuvol/output/fasterRCNN_vgg/kitti_alltest'
   if not os.path.exists(image_save_dir):
     os.makedirs(image_save_dir)
 
@@ -208,7 +208,7 @@ if __name__ == '__main__':
   max_per_image = 100
 
   # vis = args.vis
-  vis = False
+  vis = True
   
   if vis:
     thresh = 0.05
