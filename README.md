@@ -26,9 +26,15 @@ During our implementing, we referred the above implementations, especailly [long
 
 * **It is faster**. Based on the above modifications, the training is much faster. We report the training speed on NVIDIA TITAN Xp in the tables below.
 
-## Other Resources
+## Other Implementations
 
 * [Feature Pyramid Network (FPN)](https://github.com/jwyang/fpn.pytorch)
+
+* Mask R-CNN (~~ongoing~~ already implemented by [roytseng-tw](https://github.com/roytseng-tw/mask-rcnn.pytorch))
+
+## Tutorial 
+
+* [Blog](http://www.telesens.co/2018/03/11/object-detection-and-classification-using-r-cnns/) by [ankur6ue](https://github.com/ankur6ue)
 
 ## Benchmarking
 
@@ -38,8 +44,8 @@ We benchmark our code thoroughly on three datasets: pascal voc, coco and imagene
 
 model    | #GPUs | batch size | lr        | lr_decay | max_epoch     |  time/epoch | mem/GPU | mAP 
 ---------|--------|-----|--------|-----|-----|-------|--------|-----
-VGG-16     | 1 | 1 | 1e-3 | 5   | 7   |  0.76 hr | 3265MB   | 70.2
-VGG-16     | 1 | 4 | 4e-3 | 8   | 10  |  0.50 hr | 9083MB   | 70.7
+[VGG-16](https://www.dropbox.com/s/6ief4w7qzka6083/faster_rcnn_1_6_10021.pth?dl=0)     | 1 | 1 | 1e-3 | 5   | 6   |  0.76 hr | 3265MB   | 70.1
+[VGG-16](https://www.dropbox.com/s/cpj2nu35am0f9hp/faster_rcnn_1_9_2504.pth?dl=0)     | 1 | 4 | 4e-3 | 8   | 9  |  0.50 hr | 9083MB   | 69.6
 [VGG-16](https://www.dropbox.com/s/1a31y7vicby0kvy/faster_rcnn_1_10_625.pth?dl=0)     | 8 | 16| 1e-2 | 8   | 10  |  0.19 hr | 5291MB   | 69.4
 [VGG-16](https://www.dropbox.com/s/hkj7i6mbhw9tq4k/faster_rcnn_1_11_416.pth?dl=0)     | 8 | 24| 1e-2 | 10  | 11  |  0.16 hr | 11303MB  | 69.2
 [Res-101](https://www.dropbox.com/s/4v3or0054kzl19q/faster_rcnn_1_7_10021.pth?dl=0)   | 1 | 1 | 1e-3 | 5   | 7   |  0.88 hr | 3200 MB  | 75.2
@@ -48,7 +54,7 @@ VGG-16     | 1 | 4 | 4e-3 | 8   | 10  |  0.50 hr | 9083MB   | 70.7
 [Res-101](https://www.dropbox.com/s/cn8gneumg4gjo9i/faster_rcnn_1_12_416.pth?dl=0)    | 8 | 24| 1e-2 | 10  | 12  |  0.17 hr | 10327MB  | 75.1   
 
 
-2). COCO (Train/Test: coco_train/coco_test, scale=800, max_size=1200, ROI Align)
+2). COCO (Train/Test: coco_train+coco_val-minival/minival, scale=800, max_size=1200, ROI Align)
 
 model     | #GPUs | batch size |lr        | lr_decay | max_epoch     |  time/epoch | mem/GPU | mAP 
 ---------|--------|-----|--------|-----|-----|-------|--------|----- 
@@ -58,7 +64,7 @@ VGG-16     | 8 | 16    |1e-2| 4   | 6  |  4.9 hr | 7192 MB  | 29.2
 
 **NOTE**. Since the above models use scale=800, you need add "--ls" at the end of test command.
 
-3). COCO (Train/Test: coco_train/coco_test, scale=600, max_size=1000, ROI Align)
+3). COCO (Train/Test: coco_train+coco_val-minival/minival, scale=600, max_size=1000, ROI Align)
 
 model     | #GPUs | batch size |lr        | lr_decay | max_epoch     |  time/epoch | mem/GPU | mAP 
 ---------|--------|-----|--------|-----|-----|-------|--------|----- 
@@ -69,7 +75,7 @@ model     | #GPUs | batch size |lr        | lr_decay | max_epoch     |  time/epo
 
 model     | #GPUs | batch size |lr        | lr_decay | max_epoch     |  time/epoch | mem/GPU | mAP 
 ---------|--------|-----|--------|-----|-----|-------|--------|----- 
-[Res-101](http://data.lip6.fr/cadene/faster-rcnn.pytorch/faster_rcnn_1_19_48611.pth)    | 1 P100 | 4    |1e-3| 5   | 20  |  3.7 hr    |12707 MB  | 4.4
+[VGG-16](http://data.lip6.fr/cadene/faster-rcnn.pytorch/faster_rcnn_1_19_48611.pth)    | 1 P100 | 4    |1e-3| 5   | 20  |  3.7 hr    |12707 MB  | 4.4
 
 Thanks to [Remi](https://github.com/Cadene) for providing the pretrained detection model on visual genome!
 
@@ -79,8 +85,9 @@ Thanks to [Remi](https://github.com/Cadene) for providing the pretrained detecti
 ### What we are going to do
 
 - [x] Support both python2 and python3 (great thanks to [cclauss](https://github.com/cclauss)).
-- [ ] Run systematical experiments on PASCAL VOC 07/12, COCO, ImageNet, Visual Genome (VG) with different settings.
-- [ ] Write a detailed report about the new stuffs in our implementations, and the quantitative results in our experiments.
+- [ ] Add deformable pooling layer as an alternative way for roi pooling (mainly supported by [Xander](https://github.com/xanderchf))
+- [ ] ~~Run systematical experiments on PASCAL VOC 07/12, COCO, ImageNet, Visual Genome (VG) with different settings.~~
+- [ ] ~~Write a detailed report about the new stuffs in our implementations, and the quantitative results in our experiments.~~
 
 ## Preparation 
 
@@ -92,7 +99,7 @@ git clone https://github.com/jwyang/faster-rcnn.pytorch.git
 
 Then, create a folder:
 ```
-mkdir data
+cd faster-rcnn.pytorch && mkdir data
 ```
 
 ### prerequisites
@@ -125,7 +132,7 @@ Download them and put them into the data/pretrained_model/.
 
 ### Compilation
 
-As pointed out by [ruotianluo/pytorch-faster-rcnn](https://github.com/ruotianluo/pytorch-faster-rcnn), choose the right `-arch` to compile the cuda code:
+As pointed out by [ruotianluo/pytorch-faster-rcnn](https://github.com/ruotianluo/pytorch-faster-rcnn), choose the right `-arch` in `make.sh` file, to compile the cuda code:
 
   | GPU model  | Architecture |
   | ------------- | ------------- |
@@ -202,7 +209,7 @@ If you want to run detection on your own images with a pre-trained model, downlo
 ```
 python demo.py --net vgg16 \
                --checksession $SESSION --checkepoch $EPOCH --checkpoint $CHECKPOINT \
-               --cuda
+               --cuda --load_dir path/to/model/directoy
 ```
 
 Then you will find the detection results in folder $ROOT/images. 
@@ -215,14 +222,25 @@ Below are some detection results:
 <img src="images/img3_det_res101.jpg" width="430"/> <img src="images/img4_det_res101.jpg" width="430"/>
 </div>
 
+## Webcam Demo
+
+You can use a webcam in a real-time demo by running
+```
+python demo.py --net vgg16 \
+               --checksession $SESSION --checkepoch $EPOCH --checkpoint $CHECKPOINT \
+               --cuda --load_dir path/to/model/directoy \
+               --webcam $WEBCAM_ID
+```
+The demo is stopped by clicking the image window and then pressing the 'q' key.
+
 ## Authorship
 
-This project is equally contributed by [Jianwei Yang](https://github.com/jwyang) and [Jiasen Lu](https://github.com/jiasenlu).
+This project is equally contributed by [Jianwei Yang](https://github.com/jwyang) and [Jiasen Lu](https://github.com/jiasenlu), and many others (thanks to them!).
 
 ## Citation
 
     @article{jjfaster2rcnn,
-        Author = {Jianwei Yang and Jiasen Lu, Dhruv Batra, Devi Parikh},
+        Author = {Jianwei Yang and Jiasen Lu and Dhruv Batra and Devi Parikh},
         Title = {A Faster Pytorch Implementation of Faster R-CNN},
         Journal = {https://github.com/jwyang/faster-rcnn.pytorch},
         Year = {2017}
