@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import math
 import torchvision.models as models
-from model.faster_rcnn.faster_rcnn_trans import _fasterRCNN
+from model.faster_rcnn.faster_rcnn_transConv3 import _fasterRCNN
 import pdb
 
 class vgg16(_fasterRCNN):
@@ -37,9 +37,9 @@ class vgg16(_fasterRCNN):
     # not using the last maxpool layer
     # self.RCNN_base = nn.Sequential(*list(vgg.features._modules.values())[:-1])
     ###############
-    self.RCNN_base = nn.Sequential(*list(vgg.features._modules.values())[:23])
+    self.RCNN_base = nn.Sequential(*list(vgg.features._modules.values())[:16])
 
-    self.RCNN_base2 = nn.Sequential(*list(vgg.features._modules.values())[23:-1])
+    self.RCNN_base2 = nn.Sequential(*list(vgg.features._modules.values())[16:-1])
     ###############
 
     # Fix the layers before conv3:
