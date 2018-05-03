@@ -11,12 +11,15 @@ from __future__ import division
 from __future__ import print_function
 
 __sets = {}
-from datasets.kitti_pascal_voc import pascal_voc
+from datasets.kitti_pascal_voc import kitti_pascal_voc
+from datasets.pascal_voc import pascal_voc
 from datasets.coco import coco
 from datasets.imagenet import imagenet
 from datasets.vg import vg
 
 import numpy as np
+
+__sets['kitti'] = (lambda split=['trainval'], year=['2007']: kitti_pascal_voc(split, year))
 
 # Set up voc_<year>_<split>
 for year in ['2007']:
