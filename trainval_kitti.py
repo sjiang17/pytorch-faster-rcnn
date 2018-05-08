@@ -32,6 +32,8 @@ from model.utils.net_utils import weights_normal_init, save_net, load_net, \
 
 from model.faster_rcnn.vgg16 import vgg16
 from model.faster_rcnn.resnet import resnet
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 def parse_args():
   """
@@ -40,7 +42,7 @@ def parse_args():
   parser = argparse.ArgumentParser(description='Train a Fast R-CNN network')
   parser.add_argument('--dataset', dest='dataset',
                       help='training dataset',
-                      default='pascal_voc', type=str)
+                      default='kitti', type=str)
   parser.add_argument('--net', dest='net',
                     help='vgg16, res101',
                     default='vgg16', type=str)
@@ -158,8 +160,8 @@ if __name__ == '__main__':
     logger = Logger('./logs')
 
   if args.dataset == "kitti":
-      args.imdb_name = "voc_2007_trainval"
-      args.imdbval_name = "voc_2007_test"
+      args.imdb_name = "kitti_2007_trainval"
+      args.imdbval_name = "kitti_2007_test"
       args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '20']
   # elif args.dataset == "pascal_voc_0712":
   #     args.imdb_name = "voc_2007_trainval+voc_2012_trainval"
@@ -197,7 +199,7 @@ if __name__ == '__main__':
 
   # train set
   # -- Note: Use validation set and disable the flipped to enable faster loading.
-  cfg.TRAIN.USE_FLIPPED = True
+  cfg.TRAIN.USE_FLIPPED = False
   cfg.USE_GPU_NMS = args.cuda
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdb_name)
   train_size = len(roidb)

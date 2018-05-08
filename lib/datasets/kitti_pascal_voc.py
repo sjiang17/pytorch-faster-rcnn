@@ -37,7 +37,7 @@ except NameError:
 # <<<< obsolete
 
 
-class pascal_voc(imdb):
+class kitti_pascal_voc(imdb):
     def __init__(self, image_set, year, devkit_path=None):
         imdb.__init__(self, 'voc_' + year + '_' + image_set)
         self._year = year
@@ -367,7 +367,7 @@ class pascal_voc(imdb):
 
 
 if __name__ == '__main__':
-    d = pascal_voc('trainval', '2007')
+    d = kitti_pascal_voc('trainval', '2007')
     res = d.roidb
     from IPython import embed;
 

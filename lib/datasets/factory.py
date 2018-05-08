@@ -19,9 +19,10 @@ from datasets.vg import vg
 
 import numpy as np
 
-__sets['kitti'] = (lambda split=['trainval'], year=['2007']: kitti_pascal_voc(split, year))
+__sets['kitti_2007_trainval'] = (lambda split='trainval', year='2007': kitti_pascal_voc(split, year))
+__sets['kitti_2007_test'] = (lambda split='test', year='2007': kitti_pascal_voc(split, year))
 
-# Set up voc_<year>_<split>
+## Set up voc_<year>_<split>
 for year in ['2007']:
   for split in ['train', 'val', 'trainval', 'test']:
     name = 'voc_{}_{}'.format(year, split)

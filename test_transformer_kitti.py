@@ -197,8 +197,8 @@ if __name__ == '__main__':
   # transformer_model_name = '/siyuvol/py_flood/save/test3/transformer_test3_95.pth' 
   # transformer_model_name = 'transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_85.pth'
   # transformer_model_name = '/siyuvol/py_flood/save/MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP/transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_95.pth'
-  # transformer_model_name = '/home/tmu/py_flood/save/shallow/adv_conv4_lr1e-05_lrd1e-06_lmda0.001_ftshallow/transformer_adv_conv4_lr1e-05_lrd1e-06_lmda0.001_ftshallow_45.pth'
-  image_save_dir = ''
+  transformer_model_name = '/siyuvol/py_flood/save/MASK_kitti_UNet_lr0.01_SGD_dropout/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_250.pth'
+  image_save_dir = '/siyuvol/output/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_300'
   
   transformer_model = torch.load(transformer_model_name)
   model_dict = fasterRCNN.state_dict()
@@ -242,7 +242,7 @@ if __name__ == '__main__':
   max_per_image = 100
 
   # vis = args.vis
-  vis = False
+  vis = True
 
   if vis:
     thresh = 0.05
@@ -333,7 +333,7 @@ if __name__ == '__main__':
             cls_dets = cls_dets[order]
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep.view(-1).long()]
-            if vis and j == 15: 
+            if vis and j == 7: 
               im2show = vis_detections(im2show, imdb.classes[j], cls_dets.cpu().numpy(), 0.3)
             all_boxes[j][i] = cls_dets.cpu().numpy()
           else:
