@@ -112,14 +112,14 @@ class _fasterRCNN(nn.Module):
         # feed image data to base model to obtain base feature map
         # base_feat = self.RCNN_base(im_data)
         base_feat_conv3 = self.RCNN_base(im_data)
-        base_feat_conv4 = self.RCNN_conv4(im_data)
-        base_feat_conv5 = self.RCNN_conv5(im_data)
+        base_feat_conv4 = self.RCNN_conv4(base_feat_conv3)
+        base_feat_conv5 = self.RCNN_conv5(base_feat_conv4)
         
         ############
         x_o3 = self.conv3(base_feat_conv3)
         x_o4 = self.conv4(base_feat_conv4)
         x_o5 = self.conv5(base_feat_conv5)
-        x_o = x_o3 + x_o5 + x_o5
+        x_o = x_o3 + x_o4 + x_o5
 
         x_e1 = self.e1(x_o)
         x_e2 = self.e2(x_e1)
