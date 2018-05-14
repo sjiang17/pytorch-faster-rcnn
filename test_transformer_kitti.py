@@ -178,13 +178,13 @@ if __name__ == '__main__':
   checkpoint2 = {}
   for k, v in checkpoint['model'].items():
     if '24' in k:
-      newk = k.replace('RCNN_base.24', 'RCNN_base2.1')
+      newk = k.replace('RCNN_base.24', 'RCNN_base2.0')
       checkpoint2[newk] = v
     elif '26' in k:
-      newk = k.replace('RCNN_base.26', 'RCNN_base2.3')
+      newk = k.replace('RCNN_base.26', 'RCNN_base2.2')
       checkpoint2[newk] = v
     elif '28' in k:
-      newk = k.replace('RCNN_base.28', 'RCNN_base2.5')
+      newk = k.replace('RCNN_base.28', 'RCNN_base2.4')
       checkpoint2[newk] = v
     else:
       checkpoint2[k] = v
@@ -197,8 +197,8 @@ if __name__ == '__main__':
   # transformer_model_name = '/siyuvol/py_flood/save/test3/transformer_test3_95.pth' 
   # transformer_model_name = 'transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_85.pth'
   # transformer_model_name = '/siyuvol/py_flood/save/MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP/transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_95.pth'
-  transformer_model_name = '/siyuvol/py_flood/save/MASK_kitti_UNet_lr0.01_SGD_dropout/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_250.pth'
-  image_save_dir = '/siyuvol/output/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_300'
+  transformer_model_name = '/pvdata/savemodel/MASK_kitti_UNet_lr0.01_SGD_dropout/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_250.pth'
+  image_save_dir = '/pvdata/output/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_300'
   
   transformer_model = torch.load(transformer_model_name)
   model_dict = fasterRCNN.state_dict()
@@ -242,7 +242,7 @@ if __name__ == '__main__':
   max_per_image = 100
 
   # vis = args.vis
-  vis = True
+  vis = False
 
   if vis:
     thresh = 0.05

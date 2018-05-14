@@ -178,22 +178,22 @@ if __name__ == '__main__':
   checkpoint2 = {}
   for k, v in checkpoint['model'].items():
     if '17' in k:
-      newk = k.replace('RCNN_base.17', 'RCNN_conv4.1')
+      newk = k.replace('RCNN_base.17', 'RCNN_conv4.0')
       checkpoint2[newk] = v
     elif '19' in k:
-      newk = k.replace('RCNN_base.19', 'RCNN_conv4.3')
+      newk = k.replace('RCNN_base.19', 'RCNN_conv4.2')
       checkpoint2[newk] = v
     elif '21' in k:
-      newk = k.replace('RCNN_base.21', 'RCNN_conv4.5')
+      newk = k.replace('RCNN_base.21', 'RCNN_conv4.4')
       checkpoint2[newk] = v
     elif '24' in k:
-      newk = k.replace('RCNN_base.24', 'RCNN_conv5.1')
+      newk = k.replace('RCNN_base.24', 'RCNN_conv5.0')
       checkpoint2[newk] = v
     elif '26' in k:
-      newk = k.replace('RCNN_base.26', 'RCNN_conv5.3')
+      newk = k.replace('RCNN_base.26', 'RCNN_conv5.2')
       checkpoint2[newk] = v
     elif '28' in k:
-      newk = k.replace('RCNN_base.28', 'RCNN_conv5.5')
+      newk = k.replace('RCNN_base.28', 'RCNN_conv5.4')
       checkpoint2[newk] = v
     else:
       checkpoint2[k] = v

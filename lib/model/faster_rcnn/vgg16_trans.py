@@ -37,9 +37,9 @@ class vgg16(_fasterRCNN):
     # not using the last maxpool layer
     # self.RCNN_base = nn.Sequential(*list(vgg.features._modules.values())[:-1])
     ###############
-    self.RCNN_base = nn.Sequential(*list(vgg.features._modules.values())[:23])
+    self.RCNN_base = nn.Sequential(*list(vgg.features._modules.values())[:24])
 
-    self.RCNN_base2 = nn.Sequential(*list(vgg.features._modules.values())[23:-1])
+    self.RCNN_base2 = nn.Sequential(*list(vgg.features._modules.values())[24:-1])
     ###############
 
     # Fix the layers before conv3:
