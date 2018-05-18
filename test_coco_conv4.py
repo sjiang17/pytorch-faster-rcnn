@@ -131,10 +131,10 @@ if __name__ == '__main__':
 
   print('{:d} roidb entries'.format(len(roidb)))
 
-  input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
+  input_dir = args.load_dir
   if not os.path.exists(input_dir):
     raise Exception('There is no input directory for loading network from ' + input_dir)
-  load_name = os.path.join(input_dir, '/fldata/pytorch-model/faster_rcnn_vgg16_coco-jwy.pth')
+  load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
 
   # initilize the network here.
   if args.net == 'vgg16':

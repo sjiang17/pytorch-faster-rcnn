@@ -109,7 +109,7 @@ class _fasterRCNN(nn.Module):
         x = self.d2(x)
         x = self.d3_deconv(torch.cat([x_e1, x], 1), output_size=base_feat_bottom.size())
         x = self.d3(x)
-        x = self.d4(torch.cat([x_input, x], 1))
+        x = self.d4(torch.cat([base_feat_bottom, x], 1))
         x = self.d5(x)
         #############
 
