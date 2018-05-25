@@ -149,8 +149,10 @@ if __name__ == '__main__':
   input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
   if not os.path.exists(input_dir):
     raise Exception('There is no input directory for loading network from ' + input_dir)
-  load_name = os.path.join(input_dir,
-    'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
+  # load_name = os.path.join(input_dir,
+    #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
+  load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
+
 
   # initilize the network here.
   if args.net == 'vgg16':
