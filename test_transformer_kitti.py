@@ -197,7 +197,7 @@ if __name__ == '__main__':
   # transformer_model_name = '/siyuvol/py_flood/save/test3/transformer_test3_95.pth' 
   # transformer_model_name = 'transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_85.pth'
   # transformer_model_name = '/siyuvol/py_flood/save/MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP/transformer_MASKED_kitti_adv_lrg0.0001_lrd1e-06_lmda0.01_r3.0_SHALLOW_DROP_95.pth'
-  transformer_model_name = '/pvdata/savemodel/MASK_kitti_UNet_lr0.01_SGD_dropout/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_250.pth'
+  # transformer_model_name = '/pvdata/savemodel/MASK_kitti_UNet_lr0.01_SGD_dropout/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_250.pth'
   image_save_dir = '/pvdata/output/transformer_MASK_kitti_UNet_lr0.01_SGD_dropout_300'
   
   transformer_model = torch.load(transformer_model_name)

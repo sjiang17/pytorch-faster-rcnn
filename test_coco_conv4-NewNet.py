@@ -28,7 +28,7 @@ from model.rpn.bbox_transform import clip_boxes
 from model.nms.nms_wrapper import nms
 from model.rpn.bbox_transform import bbox_transform_inv
 from model.utils.net_utils import save_net, load_net, vis_detections
-from model.faster_rcnn.vgg16 import vgg16
+from model.faster_rcnn.vgg16_trans_UNetConv4 import vgg16
 from model.faster_rcnn.resnet import resnet
 
 import pdb
@@ -57,7 +57,7 @@ def parse_args():
                       help='set config keys', default=None,
                       nargs=argparse.REMAINDER)
   parser.add_argument('--load_dir', dest='load_dir',
-                      help='directory to load models', default="/siyuvol/pytorch-model",
+                      help='directory to load models', default="/fldata/pytorch-model",
                       nargs=argparse.REMAINDER)
   parser.add_argument('--cuda', dest='cuda',
                       help='whether use CUDA',
@@ -89,6 +89,8 @@ def parse_args():
   parser.add_argument('--vis', dest='vis',
                       help='visualization mode',
                       action='store_true')
+  parser.add_argument('--gen', dest='gen')
+  parser.add_argument('--gpuind', dest='gpuind', default='0')
   args = parser.parse_args()
   return args
 
@@ -97,37 +99,20 @@ momentum = cfg.TRAIN.MOMENTUM
 weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 if __name__ == '__main__':
-
-  os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
+  
   args = parse_args()
-
   print('Called with args:')
   print(args)
 
+  os.environ["CUDA_VISIBLE_DEVICES"] = args.gpuind
+  
   if torch.cuda.is_available() and not args.cuda:
     print("WARNING: You have a CUDA device, so you should probably run with --cuda")
 
   np.random.seed(cfg.RNG_SEED)
-  if args.dataset == "pascal_voc":
-      args.imdb_name = "voc_2007_trainval"
-      args.imdbval_name = "voc_2007_test"
-      args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']   
-  elif args.dataset == "pascal_voc_0712":
-      args.imdb_name = "voc_2007_trainval+voc_2012_trainval"
-      args.imdbval_name = "voc_2007_test"
-      args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']
-  elif args.dataset == "coco":
-      args.imdb_name = "coco_2014_train+coco_2014_valminusminival"
-      args.imdbval_name = "coco_2014_minival"
-      args.set_cfgs = ['ANCHOR_SCALES', '[4, 8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']
-  elif args.dataset == "imagenet":
-      args.imdb_name = "imagenet_train"
-      args.imdbval_name = "imagenet_val"
-      args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']
-  elif args.dataset == "vg":
-      args.imdb_name = "vg_150-50-50_minitrain"
-      args.imdbval_name = "vg_150-50-50_minival"
+  if args.dataset == "coco":
+      args.imdb_name = "coco_2017_train"
+      args.imdbval_name = "coco_2017_val"
       args.set_cfgs = ['ANCHOR_SCALES', '[4, 8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']
 
   args.cfg_file = "cfgs/{}_ls.yml".format(args.net) if args.large_scale else "cfgs/{}.yml".format(args.net)
@@ -146,13 +131,10 @@ if __name__ == '__main__':
 
   print('{:d} roidb entries'.format(len(roidb)))
 
-  input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
+  input_dir = args.load_dir
   if not os.path.exists(input_dir):
     raise Exception('There is no input directory for loading network from ' + input_dir)
-  # load_name = os.path.join(input_dir,
-    #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
   load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
-
 
   # initilize the network here.
   if args.net == 'vgg16':
@@ -166,21 +148,50 @@ if __name__ == '__main__':
   else:
     print("network is not defined")
     pdb.set_trace()
-  
-  image_save_dir = '/siyuvol/output/fasterRCNN_vgg/kitti_greymasktest'
-  if not os.path.exists(image_save_dir):
-    os.makedirs(image_save_dir)
 
   fasterRCNN.create_architecture()
-
-  print("load checkpoint %s" % (load_name))
+  model_dict = fasterRCNN.state_dict()
+  
+  
+  print("loading checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)
-  fasterRCNN.load_state_dict(checkpoint['model'])
   if 'pooling_mode' in checkpoint.keys():
     cfg.POOLING_MODE = checkpoint['pooling_mode']
 
-
+  checkpoint2 = {}
+  for k, v in checkpoint['model'].items():
+    if '24' in k:
+      newk = k.replace('RCNN_base.24', 'RCNN_base2.0')
+      checkpoint2[newk] = v
+    elif '26' in k:
+      newk = k.replace('RCNN_base.26', 'RCNN_base2.2')
+      checkpoint2[newk] = v
+    elif '28' in k:
+      newk = k.replace('RCNN_base.28', 'RCNN_base2.4')
+      checkpoint2[newk] = v
+    else:
+      checkpoint2[k] = v
+  
+  model_dict = fasterRCNN.state_dict()
+  model_dict.update(checkpoint2)
+  fasterRCNN.load_state_dict(model_dict)
+  
+  transformer_model_name = args.gen
+  image_save_dir = ''
+  
+  transformer_model = torch.load(transformer_model_name)
+  model_dict = fasterRCNN.state_dict()
+  model_dict.update(transformer_model)
+  fasterRCNN.load_state_dict(model_dict)
+  
+  model_dict = fasterRCNN.state_dict()
+  
+  # for k in sorted(model_dict.keys()):
+  #   print (k)
   print('load model successfully!')
+
+  print(transformer_model_name)
+
   # initilize the tensor holder here.
   im_data = torch.FloatTensor(1)
   im_info = torch.FloatTensor(1)
@@ -211,9 +222,11 @@ if __name__ == '__main__':
 
   # vis = args.vis
   vis = False
-  
+
   if vis:
     thresh = 0.05
+    if not os.path.exists(image_save_dir):
+      os.makedirs(image_save_dir)
   else:
     thresh = 0.0
 
@@ -299,7 +312,7 @@ if __name__ == '__main__':
             cls_dets = cls_dets[order]
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep.view(-1).long()]
-            if vis and j == 7:
+            if vis and j == 7: 
               im2show = vis_detections(im2show, imdb.classes[j], cls_dets.cpu().numpy(), 0.3)
             all_boxes[j][i] = cls_dets.cpu().numpy()
           else:
@@ -323,8 +336,9 @@ if __name__ == '__main__':
       sys.stdout.flush()
 
       if vis:
-          img_save_file = os.path.join(image_save_dir, "{}.png".format(i))
+          img_save_file = os.path.join(image_save_dir, "{}.jpg".format(i))
           cv2.imwrite(img_save_file, im2show)
+          # pdb.set_trace()
           #cv2.imshow('test', im2show)
           #cv2.waitKey(0)
 
