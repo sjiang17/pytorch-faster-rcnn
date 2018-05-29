@@ -46,13 +46,13 @@ def parse_args():
   parser = argparse.ArgumentParser(description='Train a Fast R-CNN network')
   parser.add_argument('--dataset', dest='dataset',
                       help='training dataset',
-                      default='pascal_voc', type=str)
+                      default='kitti', type=str)
   parser.add_argument('--cfg', dest='cfg_file',
                       help='optional config file',
                       default='cfgs/vgg16.yml', type=str)
   parser.add_argument('--net', dest='net',
                       help='vgg16, res50, res101, res152',
-                      default='res101', type=str)
+                      default='vgg16', type=str)
   parser.add_argument('--set', dest='set_cfgs',
                       help='set config keys', default=None,
                       nargs=argparse.REMAINDER)
@@ -109,9 +109,9 @@ if __name__ == '__main__':
     print("WARNING: You have a CUDA device, so you should probably run with --cuda")
 
   np.random.seed(cfg.RNG_SEED)
-  if args.dataset == "pascal_voc":
-      args.imdb_name = "voc_2007_trainval"
-      args.imdbval_name = "voc_2007_test"
+  if args.dataset == "kitti":
+      args.imdb_name = "kitti_2007_trainval"
+      args.imdbval_name = "kitti_2007_test"
       args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']   
   elif args.dataset == "pascal_voc_0712":
       args.imdb_name = "voc_2007_trainval+voc_2012_trainval"
@@ -147,12 +147,12 @@ if __name__ == '__main__':
   print('{:d} roidb entries'.format(len(roidb)))
 
   input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
-  if not os.path.exists(input_dir):
-    raise Exception('There is no input directory for loading network from ' + input_dir)
+  # if not os.path.exists(input_dir):
+    # raise Exception('There is no input directory for loading network from ' + input_dir)
   # load_name = os.path.join(input_dir,
     #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
   # load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
-  load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_15_5983.pth'
+  load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_19_5983.pth'
 
   # initilize the network here.
   if args.net == 'vgg16':
