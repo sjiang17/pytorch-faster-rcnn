@@ -51,6 +51,8 @@ class _fasterRCNN(nn.Module):
         # feed base feature map tp RPN to obtain rois
         rois, rpn_loss_cls, rpn_loss_bbox = self.RCNN_rpn(base_feat, im_info, gt_boxes, num_boxes)
 
+        ######
+        print("roi", rois.size())
         # if it is training phrase, then use ground trubut bboxes for refining
         if self.training:
             roi_data = self.RCNN_proposal_target(rois, gt_boxes, num_boxes)
@@ -84,6 +86,7 @@ class _fasterRCNN(nn.Module):
         elif cfg.POOLING_MODE == 'pool':
             pooled_feat = self.RCNN_roi_pool(base_feat, rois.view(-1,5))
 
+        print("pooled_feat", pooled_feat.size())
         # feed pooled features to top model
         pooled_feat = self._head_to_tail(pooled_feat)
 
@@ -97,7 +100,7 @@ class _fasterRCNN(nn.Module):
 
         # compute object classification probability
         cls_score = self.RCNN_cls_score(pooled_feat)
-	cls_prob = F.softmax(cls_score)
+        cls_prob = F.softmax(cls_score)
 
         RCNN_loss_cls = 0
         RCNN_loss_bbox = 0
