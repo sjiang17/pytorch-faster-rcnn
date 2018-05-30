@@ -125,6 +125,7 @@ if __name__ == '__main__':
   pprint.pprint(cfg)
 
   cfg.TRAIN.USE_FLIPPED = False
+  print('combining roidb')
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdbval_name, False)
   imdb.competition_mode(on=True)
 
@@ -136,7 +137,7 @@ if __name__ == '__main__':
   # load_name = os.path.join(input_dir,
     #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
   # load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
-  load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_19_5983.pth'
+  load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_10_5983.pth'
 
   # initilize the network here.
   if args.net == 'vgg16':
@@ -214,6 +215,7 @@ if __name__ == '__main__':
 
   fasterRCNN.eval()
   empty_array = np.transpose(np.array([[],[],[],[],[]]), (1,0))
+  print(num_images)
   for i in range(num_images):
 
       data = next(data_iter)
