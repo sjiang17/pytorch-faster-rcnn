@@ -73,8 +73,8 @@ class _fasterRCNN(nn.Module):
             rois_outside_ws = None
             rpn_loss_cls = 0
             rpn_loss_bbox = 0
-        rois = torch.Tensor([[0.0, 0.0, 0.0, 200.0, 200.0], [0.0, 0.0, 0.0, 100.0, 100.0]]).unsqueeze(0)
-        rois = Variable(rois.cuda())
+        # rois = torch.Tensor([[0.0, 0.0, 0.0, 200.0, 200.0], [0.0, 0.0, 0.0, 100.0, 100.0]]).unsqueeze(0)
+        # rois = Variable(rois.cuda())
         # do roi pooling based on predicted rois
 
         if cfg.POOLING_MODE == 'crop':
@@ -90,7 +90,7 @@ class _fasterRCNN(nn.Module):
         elif cfg.POOLING_MODE == 'pool':
             pooled_feat = self.RCNN_roi_pool(base_feat, rois.view(-1,5))
 
-        print("pooled_feat", pooled_feat.size())
+        # print("pooled_feat", pooled_feat.size())
         # feed pooled features to top model
         pooled_feat = self._head_to_tail(pooled_feat)
 

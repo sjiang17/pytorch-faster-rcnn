@@ -202,9 +202,11 @@ class roibatchLoader(data.Dataset):
         data = data.permute(0, 3, 1, 2).contiguous().view(3, data_height, data_width)
         im_info = im_info.view(3)
 
-        gt_boxes = torch.FloatTensor([1,1,1,1,1])
-        num_boxes = 0
-
+        # gt_boxes = torch.FloatTensor([1,1,1,1,1])
+        # num_boxes = 0
+        gt_boxes = torch.from_numpy(blobs['gt_boxes'])
+        num_boxes = gt_boxes.size(0)
+        
         return data, im_info, gt_boxes, num_boxes
 
   def __len__(self):
