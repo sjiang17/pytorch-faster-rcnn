@@ -12,7 +12,7 @@ from __future__ import print_function
 
 __sets = {}
 from datasets.kitti_pascal_voc import kitti_pascal_voc
-from datasets.pascal_voc import pascal_voc
+#from datasets.pascal_voc import pascal_voc
 from datasets.coco import coco
 from datasets.imagenet import imagenet
 from datasets.vg import vg
@@ -23,10 +23,10 @@ __sets['kitti_2007_trainval'] = (lambda split='trainval', year='2007': kitti_pas
 __sets['kitti_2007_test'] = (lambda split='test', year='2007': kitti_pascal_voc(split, year))
 
 ## Set up voc_<year>_<split>
-for year in ['2007']:
-  for split in ['train', 'val', 'trainval', 'test']:
-    name = 'voc_{}_{}'.format(year, split)
-    __sets[name] = (lambda split=split, year=year: pascal_voc(split, year))
+#for year in ['2007']:
+#  for split in ['train', 'val', 'trainval', 'test']:
+#    name = 'voc_{}_{}'.format(year, split)
+#    __sets[name] = (lambda split=split, year=year: pascal_voc(split, year))
 
 # Set up coco_2014_<split>
 for year in ['2017']:
