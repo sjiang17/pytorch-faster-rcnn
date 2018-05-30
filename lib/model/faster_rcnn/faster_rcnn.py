@@ -45,6 +45,7 @@ class _fasterRCNN(nn.Module):
         gt_boxes = gt_boxes.data
         num_boxes = num_boxes.data
 
+        print(gt_boxes.size())
         # feed image data to base model to obtain base feature map
         base_feat = self.RCNN_base(im_data)
 
@@ -52,7 +53,10 @@ class _fasterRCNN(nn.Module):
         rois, rpn_loss_cls, rpn_loss_bbox = self.RCNN_rpn(base_feat, im_info, gt_boxes, num_boxes)
 
         ######
-        print("roi", rois.size())
+        # print("roi", rois.size())
+        # for i in range(0, 300):
+        #    if not rois[0, i, 0] == 0.0:
+        #        print(rois[0, i,:])
         # if it is training phrase, then use ground trubut bboxes for refining
         if self.training:
             roi_data = self.RCNN_proposal_target(rois, gt_boxes, num_boxes)
@@ -69,8 +73,8 @@ class _fasterRCNN(nn.Module):
             rois_outside_ws = None
             rpn_loss_cls = 0
             rpn_loss_bbox = 0
-
-        rois = Variable(rois)
+        rois = torch.Tensor([[0.0, 0.0, 0.0, 200.0, 200.0], [0.0, 0.0, 0.0, 100.0, 100.0]]).unsqueeze(0)
+        rois = Variable(rois.cuda())
         # do roi pooling based on predicted rois
 
         if cfg.POOLING_MODE == 'crop':
