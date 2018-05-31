@@ -32,7 +32,7 @@ from model.faster_rcnn.vgg16 import vgg16
 # from model.faster_rcnn.resnet import resnet
 
 import pdb
-
+import h5py
 try:
     xrange          # Python 2
 except NameError:
@@ -98,7 +98,7 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 if __name__ == '__main__':
 
-  os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+  os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 
   args = parse_args()
 
@@ -138,7 +138,11 @@ if __name__ == '__main__':
     #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
   # load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
   load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_10_5983.pth'
+<<<<<<< HEAD
 
+=======
+  h5_save_dir = '/pvdata/dataset/kitti/vehicle/unocc_annotation/roi_feature/train'
+>>>>>>> 7629cb9d26458ea5d3017aa825d7e007b8e63c4c
   # initilize the network here.
   if args.net == 'vgg16':
     fasterRCNN = vgg16(imdb.classes, pretrained=False, class_agnostic=args.class_agnostic)
@@ -210,12 +214,16 @@ if __name__ == '__main__':
 
   data_iter = iter(dataloader)
 
+  misc_tic = time.time()
   _t = {'im_detect': time.time(), 'misc': time.time()}
   det_file = os.path.join(output_dir, 'detections.pkl')
 
   fasterRCNN.eval()
   empty_array = np.transpose(np.array([[],[],[],[],[]]), (1,0))
-  print(num_images)
+  
+  f_bn = open('/siyuvol/pytorch-faster-rcnn/data/VOCdevkit2007/VOC2007/ImageSets/Main/test.txt', 'r')
+  lines_bn = [line.strip() for line in f_bn.readlines()]
+  print(len(lines_bn), num_images)
   for i in range(num_images):
 
       data = next(data_iter)
@@ -227,16 +235,19 @@ if __name__ == '__main__':
       det_tic = time.time()
       pooled_feat = fasterRCNN(im_data, im_info, gt_boxes, num_boxes)
 
-      single_feat = pooled_feat.data[0, 0, :, :]
-      print(single_feat.size())
-      # boxes = rois.data[:, :, 1:5]
+      num_rois = pooled_feat.data.size()[0]
+      for ir in range(num_rois):
+        save_file = os.path.join(h5_save_dir, 'occ_{}_{}.h5'.format(lines_bn[i], ir))
+        
+        h5_file = h5py.File(save_file,'w')
+        h5_file['data'] = pooled_feat.data[ir, :, :, :] 
+        h5_file.close()
 
+      det_toc = time.time()
+      detect_time = det_toc - det_tic
 
-      misc_toc = time.time()
-      nms_time = misc_toc - misc_tic
-
-      sys.stdout.write('im_detect: {:d}/{:d} {:.3f}s {:.3f}s   \r' \
-          .format(i + 1, num_images, detect_time, nms_time))
+      sys.stdout.write('im_detect: {:d}/{:d} {:.3f}s \r' \
+          .format(i + 1, num_images, detect_time))
       sys.stdout.flush()
 
       if vis:

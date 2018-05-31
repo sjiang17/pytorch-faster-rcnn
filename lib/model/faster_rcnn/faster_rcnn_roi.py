@@ -44,8 +44,7 @@ class _fasterRCNN(nn.Module):
         im_info = im_info.data
         gt_boxes = gt_boxes.data
         num_boxes = num_boxes.data
-
-        print(gt_boxes.size())
+       
         # feed image data to base model to obtain base feature map
         base_feat = self.RCNN_base(im_data)
 
@@ -74,8 +73,13 @@ class _fasterRCNN(nn.Module):
             rpn_loss_cls = 0
             rpn_loss_bbox = 0
         # rois = torch.Tensor([[0.0, 0.0, 0.0, 200.0, 200.0], [0.0, 0.0, 0.0, 100.0, 100.0]]).unsqueeze(0)
-        # rois = Variable(rois.cuda())
+        rois = Variable(rois)
         # do roi pooling based on predicted rois
+
+        num_gtbox = gt_boxes.size()[1]
+        rois = torch.zeros((1, num_gtbox, 5))
+        rois[0, :num_gtbox, 1:] = gt_boxes[0, :, 0:4]
+        rois = Variable(rois.cuda())
 
         if cfg.POOLING_MODE == 'crop':
             # pdb.set_trace()
@@ -89,12 +93,16 @@ class _fasterRCNN(nn.Module):
             pooled_feat = self.RCNN_roi_align(base_feat, rois.view(-1, 5))
         elif cfg.POOLING_MODE == 'pool':
             pooled_feat = self.RCNN_roi_pool(base_feat, rois.view(-1,5))
-
-        # print("pooled_feat", pooled_feat.size())
-        # feed pooled features to top model
-        #pooled_feat = self._head_to_tail(pooled_feat)
-
-        return pooled_feat 
+        
+#       num_gtbox = gt_boxes.size()[1]
+#        rois = torch.zeros((1, max(num_gtbox, 2), 5))
+#        rois[0, :num_gtbox, 1:] = gt_boxes[0, :, 0:4]
+#        if num_gtbox < 2:
+#            rois[0, num_gtbox:, 1:] = torch.Tensor([0.0, 0.0, 100.0, 100.0]).expand(num_gtbox, 4)
+#            rois[0, :, 0] = 0
+#            rois = Variable(rois.cuda())
+#
+        return pooled_feat
 
     def _init_weights(self):
         def normal_init(m, mean, stddev, truncated=False):
