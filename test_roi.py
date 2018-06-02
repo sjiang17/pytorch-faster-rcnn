@@ -89,6 +89,8 @@ def parse_args():
   parser.add_argument('--vis', dest='vis',
                       help='visualization mode',
                       action='store_true')
+  parser.add_argument('--gen', dest='gen')
+  parser.add_argument('--gpuind', dest='gpuind', default='0')
   args = parser.parse_args()
   return args
 
@@ -98,12 +100,11 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 if __name__ == '__main__':
 
-  os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
   args = parse_args()
-
   print('Called with args:')
   print(args)
+  
+  os.environ["CUDA_VISIBLE_DEVICES"] = args.gpuind
 
   if torch.cuda.is_available() and not args.cuda:
     print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -157,7 +158,15 @@ if __name__ == '__main__':
   if 'pooling_mode' in checkpoint.keys():
     cfg.POOLING_MODE = checkpoint['pooling_mode']
 
-
+  transformer_model_name = args.gen
+  transformer_model = torch.load(transformer_model_name)
+  model_dict = fasterRCNN.state_dict()
+  model_dict.update(transformer_model)
+  fasterRCNN.load_state_dict(model_dict)
+  
+  model_dict = fasterRCNN.state_dict()
+  for k in sorted(model_dict.keys()):
+    print (k)
   print('load model successfully!')
   # initilize the tensor holder here.
   im_data = torch.FloatTensor(1)
