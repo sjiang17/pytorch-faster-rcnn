@@ -39,6 +39,8 @@ class _fasterRCNN(nn.Module):
         
         ################
         lrelu = nn.LeakyReLU(0.1, True)
+        use_bias = True
+        use_dropout = False
 
         e1_conv = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias)
         e1_norm = nn.BatchNorm2d(512)
@@ -120,7 +122,7 @@ class _fasterRCNN(nn.Module):
 
         #################
         x_input = pooled_feat
-        x = self.e1(x)
+        x = self.e1(x_input)
         x = self.e2(x)
         x = self.e3(x)
         x = self.d1_deconv(x, output_size=x_input.size())

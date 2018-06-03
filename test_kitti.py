@@ -152,7 +152,7 @@ if __name__ == '__main__':
   # load_name = os.path.join(input_dir,
     #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
   # load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
-  load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_19_5983.pth'
+  load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_10_5983.pth'
 
   # initilize the network here.
   if args.net == 'vgg16':
