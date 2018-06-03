@@ -38,6 +38,8 @@ class _fasterRCNN(nn.Module):
         
         
         ################
+        use_bias = True
+        use_dropout = False
         lrelu = nn.LeakyReLU(0.1, True)
 
         e1_conv = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1, bias=use_bias)
@@ -102,7 +104,7 @@ class _fasterRCNN(nn.Module):
             rpn_loss_cls = 0
             rpn_loss_bbox = 0
 
-        rois = Variable(rois)
+        rois = Variable(rois.cuda())
         # do roi pooling based on predicted rois
 
         if cfg.POOLING_MODE == 'crop':
@@ -120,7 +122,7 @@ class _fasterRCNN(nn.Module):
 
         #################
         x_input = pooled_feat
-        x = self.e1(x)
+        x = self.e1(x_input)
         x = self.e2(x)
         x = self.e3(x)
         x = self.d1_deconv(x, output_size=x_input.size())

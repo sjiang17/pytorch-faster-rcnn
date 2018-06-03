@@ -146,21 +146,26 @@ if __name__ == '__main__':
     print("network is not defined")
     pdb.set_trace()
   
+  vis = False
   image_save_dir = ''
-  if not os.path.exists(image_save_dir):
-    os.makedirs(image_save_dir)
+  if vis:
+    if not os.path.exists(image_save_dir):
+      os.makedirs(image_save_dir)
 
   fasterRCNN.create_architecture()
 
   print("load checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)
-  fasterRCNN.load_state_dict(checkpoint['model'])
+  # fasterRCNN.load_state_dict(checkpoint['model'])
   if 'pooling_mode' in checkpoint.keys():
     cfg.POOLING_MODE = checkpoint['pooling_mode']
-
+  
+  model_dict = fasterRCNN.state_dict()
+  model_dict.update(checkpoint['model'])
+  
   transformer_model_name = args.gen
   transformer_model = torch.load(transformer_model_name)
-  model_dict = fasterRCNN.state_dict()
+  # model_dict = fasterRCNN.state_dict()
   model_dict.update(transformer_model)
   fasterRCNN.load_state_dict(model_dict)
   
@@ -197,7 +202,6 @@ if __name__ == '__main__':
   max_per_image = 100
 
   # vis = args.vis
-  vis = False
   
   if vis:
     thresh = 0.05
