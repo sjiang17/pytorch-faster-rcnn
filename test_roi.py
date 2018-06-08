@@ -122,8 +122,8 @@ if __name__ == '__main__':
   if args.set_cfgs is not None:
     cfg_from_list(args.set_cfgs)
 
-  print('Using config:')
-  pprint.pprint(cfg)
+  # print('Using config:')
+  # pprint.pprint(cfg)
 
   cfg.TRAIN.USE_FLIPPED = False
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdbval_name, False)
