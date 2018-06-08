@@ -138,8 +138,10 @@ if __name__ == '__main__':
     #'faster_rcnn_{}_{}_{}.pth'.format(1, 10, 625))
   # load_name = os.path.join(input_dir, 'faster_rcnn_vgg16_coco-jwy.pth')
   load_name = '/siyuvol/pytorch-faster-rcnn/model/vgg16/kitti/faster_rcnn_1_10_5983.pth'
-  h5_save_dir = '/pvdata/dataset/kitti/vehicle/unocc_annotation/roi_feature/train'
-  
+  h5_save_dir = '/pvdata/dataset/kitti/vehicle/mask/roi_feature/test'
+  if not os.path.exists(h5_save_dir):
+    os.makedirs(h5_save_dir)
+
   # initilize the network here.
   if args.net == 'vgg16':
     fasterRCNN = vgg16(imdb.classes, pretrained=False, class_agnostic=args.class_agnostic)

@@ -170,8 +170,8 @@ if __name__ == '__main__':
   fasterRCNN.load_state_dict(model_dict)
   
   model_dict = fasterRCNN.state_dict()
-  for k in sorted(model_dict.keys()):
-    print (k)
+  # for k in sorted(model_dict.keys()):
+  #  print (k)
   print('load model successfully!')
   # initilize the tensor holder here.
   im_data = torch.FloatTensor(1)
